@@ -1,5 +1,5 @@
 //
-//  LoginTableViewController.swift
+//  SignUpTableViewController.swift
 //  TestApp
 //
 //  Created by Polina on 2/26/18.
@@ -8,8 +8,9 @@
 
 import UIKit
 
-class LoginTableViewController: UITableViewController {
+class SignUpTableViewController: UITableViewController {
     
+    @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
@@ -18,6 +19,10 @@ class LoginTableViewController: UITableViewController {
         
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
     // MARK: - Table view data source
     
@@ -26,13 +31,13 @@ class LoginTableViewController: UITableViewController {
         return 7
     }
     
-    @IBAction func loginButton(_ sender: Any) {
+    @IBAction func signupButton(_ sender: Any) {
         
-        let login = loginTextField.text
-        let password = passwordTextField.text
-        
-        if ((login?.isEmpty)! || (password?.isEmpty)!) {
-            displayAlert(message: "All fields required to be filled")
+        if (nameTextField.text?.isEmpty)! ||
+            (loginTextField.text?.isEmpty)! ||
+            (passwordTextField.text?.isEmpty)! {
+            
+            displayAlert(message: "Fill all the fields!")
             return
         }
         
@@ -41,13 +46,14 @@ class LoginTableViewController: UITableViewController {
         activityIndicator.hidesWhenStopped = false
         activityIndicator.startAnimating()
         
-        let baseUrl = URL(string: "https://apiecho.cf/api/login/")
+        let baseUrl = URL(string: "https://apiecho.cf/api/signup/")
         var request = URLRequest(url: baseUrl!)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         //request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        let postData = ["login" : loginTextField.text!,
+        let postData = ["name" : nameTextField.text!,
+                        "login" : loginTextField.text!,
                         "password" : passwordTextField.text!] as [String : String]
         
         do {
@@ -100,7 +106,9 @@ class LoginTableViewController: UITableViewController {
         }
     }
     
-    @IBAction func signupButton(_ sender: Any) {
+    @IBAction func cancelButton(_ sender: Any) {
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
     func displayAlert(message: String) {
