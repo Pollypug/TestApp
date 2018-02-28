@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 class LoginTableViewController: UITableViewController {
     
@@ -45,9 +46,9 @@ class LoginTableViewController: UITableViewController {
         var request = URLRequest(url: baseUrl!)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        //request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        let postData = ["login" : loginTextField.text!,
+        let postData = ["email" : loginTextField.text!,
                         "password" : passwordTextField.text!] as [String : String]
         
         do {
@@ -70,16 +71,24 @@ class LoginTableViewController: UITableViewController {
             do {
                 let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
                 if let parseJson = json {
-                    let result = parseJson["success"] as? Bool
-                    
-                    if result! {
-                        self.displayAlert(message: "New account registrated.")
-                        
-                    }
-                    else {
+                    if let userData = parseJson["data"] as? NSDictionary {
+                        let accessToken = userData["access_token"] as? String
+                        print(accessToken!)
+                        if (accessToken?.isEmpty)! {
                         self.displayAlert(message: "Could not perform this request2.")
                         return
                     }
+                        
+                        let saveSuccessfuly: Bool = KeychainWrapper.standard.set(accessToken!, forKey: "accessToken")
+                        
+                    DispatchQueue.main.async {
+                        let dataView = self.storyboard?.instantiateViewController(withIdentifier:
+                            "DataViewController") as! DataViewController
+                        let appDelegate = UIApplication.shared.delegate
+                        appDelegate?.window??.rootViewController = dataView
+                    }
+                    }
+                    
                 }
                 else {
                     self.displayAlert(message: "Could not perform this request3.")

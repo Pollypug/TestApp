@@ -50,10 +50,10 @@ class SignUpTableViewController: UITableViewController {
         var request = URLRequest(url: baseUrl!)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        //request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         let postData = ["name" : nameTextField.text!,
-                        "login" : loginTextField.text!,
+                        "email" : loginTextField.text!,
                         "password" : passwordTextField.text!] as [String : String]
         
         do {
@@ -79,10 +79,12 @@ class SignUpTableViewController: UITableViewController {
                     let result = parseJson["success"] as? Bool
                     
                     if result! {
+                        print(result!)
                         self.displayAlert(message: "New account registrated.")
                         
                     }
                     else {
+                        print(result!)
                         self.displayAlert(message: "Could not perform this request2.")
                         return
                     }
