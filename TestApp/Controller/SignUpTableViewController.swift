@@ -14,9 +14,14 @@ class SignUpTableViewController: UITableViewController {
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = false
+        activityIndicator.startAnimating()
     }
     
     override func didReceiveMemoryWarning() {
@@ -31,87 +36,7 @@ class SignUpTableViewController: UITableViewController {
         return 7
     }
     
-    @IBAction func signupButton(_ sender: Any) {
-        
-        if (nameTextField.text?.isEmpty)! ||
-            (loginTextField.text?.isEmpty)! ||
-            (passwordTextField.text?.isEmpty)! {
-            
-            displayAlert(message: "Fill all the fields!")
-            return
-        }
-        
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = false
-        activityIndicator.startAnimating()
-        
-        let baseUrl = URL(string: "https://apiecho.cf/api/signup/")
-        var request = URLRequest(url: baseUrl!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let postData = ["name" : nameTextField.text!,
-                        "email" : loginTextField.text!,
-                        "password" : passwordTextField.text!] as [String : String]
-        
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: postData, options: .prettyPrinted)
-        } catch let error {
-            print(error.localizedDescription)
-            displayAlert(message: "Try again.")
-        }
-        
-        let task = URLSession.shared.dataTask(with: request) { (data: Data?, response: URLResponse?, error:Error?) in
-            
-            self.dismissActivityIndicator(activityIndicator: activityIndicator)
-            
-            if error != nil {
-                self.displayAlert(message: "Could not perform this request1.")
-                print("error = \(String(describing: error))")
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
-                if let parseJson = json {
-                    let result = parseJson["success"] as? Bool
-                    
-                    if result! {
-                        print(result!)
-                        self.displayAlert(message: "New account registrated.")
-                        
-                    }
-                    else {
-                        print(result!)
-                        self.displayAlert(message: "Could not perform this request2.")
-                        return
-                    }
-                }
-                else {
-                    self.displayAlert(message: "Could not perform this request3.")
-                }
-            } catch {
-                self.dismissActivityIndicator(activityIndicator: activityIndicator)
-                self.displayAlert(message: "Could not perform this request4.")
-                print(error)
-            }
-        }
-        
-        task.resume()
-    }
-    func dismissActivityIndicator(activityIndicator: UIActivityIndicatorView) {
-        DispatchQueue.main.async {
-            activityIndicator.stopAnimating()
-            activityIndicator.removeFromSuperview()
-        }
-    }
-    
-    @IBAction func cancelButton(_ sender: Any) {
-        
-        self.dismiss(animated: true, completion: nil)
-    }
+    // MARK: - Alert
     
     func displayAlert(message: String) {
         DispatchQueue.main.async {
@@ -126,4 +51,46 @@ class SignUpTableViewController: UITableViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    // MARK: - Activity Indicator
+    
+    func dismissActivityIndicator(activityIndicator: UIActivityIndicatorView) {
+        DispatchQueue.main.async {
+            activityIndicator.stopAnimating()
+            activityIndicator.removeFromSuperview()
+        }
+    }
+
+    // MARK: - Actions
+    
+    @IBAction func signupButton(_ sender: Any) {
+        
+        view.addSubview(self.activityIndicator)
+        
+        if (nameTextField.text?.isEmpty)! ||
+            (loginTextField.text?.isEmpty)! ||
+            (passwordTextField.text?.isEmpty)! {
+            
+            displayAlert(message: "Fill all the fields!")
+            return
+        }
+        
+        let postData = ["name" : nameTextField.text!,
+                        "email" : loginTextField.text!,
+                        "password" : passwordTextField.text!] as [String : String]
+        
+        let user = APIClient()
+        
+        user.signup(postData: postData) { (message)  in
+            self.dismissActivityIndicator(activityIndicator: self.activityIndicator)
+            self.displayAlert(message: message)
+        }
+    }
+    
+    @IBAction func cancelButton(_ sender: Any) {
+        
+        self.dismiss(animated: true, completion: nil)
+    }
+
+
 }

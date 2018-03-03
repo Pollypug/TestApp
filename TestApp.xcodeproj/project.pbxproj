@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		368CFAD92049F13A00268F09 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CFAD82049F13A00268F09 /* APIClient.swift */; };
 		36E2D65F20442A1100D21A48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E2D65E20442A1100D21A48 /* AppDelegate.swift */; };
 		36E2D66420442A1200D21A48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36E2D66220442A1200D21A48 /* Main.storyboard */; };
 		36E2D66620442A1200D21A48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36E2D66520442A1200D21A48 /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		368CFAD82049F13A00268F09 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		36E2D65B20442A1100D21A48 /* TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36E2D65E20442A1100D21A48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36E2D66320442A1200D21A48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		368CFAD72049F11D00268F09 /* APIClient */ = {
+			isa = PBXGroup;
+			children = (
+				368CFAD82049F13A00268F09 /* APIClient.swift */,
+			);
+			path = APIClient;
+			sourceTree = "<group>";
+		};
 		36E2D65220442A1100D21A48 = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +84,7 @@
 		36E2D65D20442A1100D21A48 /* TestApp */ = {
 			isa = PBXGroup;
 			children = (
+				368CFAD72049F11D00268F09 /* APIClient */,
 				36E2D67020442AC900D21A48 /* View */,
 				36E2D67120442AD500D21A48 /* Controller */,
 				36E2D65E20442A1100D21A48 /* AppDelegate.swift */,
@@ -242,6 +253,7 @@
 				36E2D67C204458C600D21A48 /* DataViewController.swift in Sources */,
 				36E2D65F20442A1100D21A48 /* AppDelegate.swift in Sources */,
 				36E2D6762044343900D21A48 /* LoginTableViewController.swift in Sources */,
+				368CFAD92049F13A00268F09 /* APIClient.swift in Sources */,
 				36E2D67A20444AB000D21A48 /* SignUpTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

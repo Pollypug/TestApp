@@ -14,9 +14,14 @@ class LoginTableViewController: UITableViewController {
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = false
+        activityIndicator.startAnimating()
     }
     
     
@@ -29,6 +34,8 @@ class LoginTableViewController: UITableViewController {
     
     @IBAction func loginButton(_ sender: Any) {
         
+        view.addSubview(self.activityIndicator)
+        
         let login = loginTextField.text
         let password = passwordTextField.text
         
@@ -37,70 +44,25 @@ class LoginTableViewController: UITableViewController {
             return
         }
         
-        let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = false
-        activityIndicator.startAnimating()
-        
-        let baseUrl = URL(string: "https://apiecho.cf/api/login/")
-        var request = URLRequest(url: baseUrl!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
         let postData = ["email" : loginTextField.text!,
                         "password" : passwordTextField.text!] as [String : String]
         
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: postData, options: .prettyPrinted)
-        } catch let error {
-            print(error.localizedDescription)
-            displayAlert(message: "Try again.")
-        }
+        let user = APIClient()
         
-        let task = URLSession.shared.dataTask(with: request) { (data: Data?, response: URLResponse?, error:Error?) in
-            
-            self.dismissActivityIndicator(activityIndicator: activityIndicator)
-            
-            if error != nil {
-                self.displayAlert(message: "Could not perform this request1.")
-                print("error = \(String(describing: error))")
-                return
-            }
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
-                if let parseJson = json {
-                    if let userData = parseJson["data"] as? NSDictionary {
-                        let accessToken = userData["access_token"] as? String
-                        print(accessToken!)
-                        if (accessToken?.isEmpty)! {
-                        self.displayAlert(message: "Could not perform this request2.")
-                        return
-                    }
-                        
-                        let saveSuccessfuly: Bool = KeychainWrapper.standard.set(accessToken!, forKey: "accessToken")
-                        
-                    DispatchQueue.main.async {
-                        let dataView = self.storyboard?.instantiateViewController(withIdentifier:
-                            "DataViewController") as! DataViewController
-                        let appDelegate = UIApplication.shared.delegate
-                        appDelegate?.window??.rootViewController = dataView
-                    }
-                    }
-                    
+        user.login(postData: postData) { (message, success) in
+        self.dismissActivityIndicator(activityIndicator: self.activityIndicator)
+            if success {
+                DispatchQueue.main.async {
+                    let dataView = self.storyboard?.instantiateViewController(withIdentifier:
+                        "DataViewController") as! DataViewController
+                    let appDelegate = UIApplication.shared.delegate
+                    appDelegate?.window??.rootViewController = dataView
                 }
-                else {
-                    self.displayAlert(message: "Could not perform this request3.")
-                }
-            } catch {
-                self.dismissActivityIndicator(activityIndicator: activityIndicator)
-                self.displayAlert(message: "Could not perform this request4.")
-                print(error)
+            } else {
+                self.displayAlert(message: message)
             }
         }
-        
-        task.resume()
+       
     }
     func dismissActivityIndicator(activityIndicator: UIActivityIndicatorView) {
         DispatchQueue.main.async {
