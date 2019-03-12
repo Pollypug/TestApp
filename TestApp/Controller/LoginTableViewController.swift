@@ -15,10 +15,7 @@ class LoginTableViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
