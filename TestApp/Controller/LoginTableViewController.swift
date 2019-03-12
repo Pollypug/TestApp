@@ -15,6 +15,9 @@ class LoginTableViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    lazy var myactivityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +59,7 @@ class LoginTableViewController: UITableViewController {
         let newUser = user
         
         user.login(postData: postData) { (message, success) in
-        self.dismissActivityIndicator(activityIndicator: self.activityIndicator)
+            self.dismissActivityIndicator(activityIndicator: self.activityIndicator)
             if success {
                 DispatchQueue.main.async {
                     let dataView = self.storyboard?.instantiateViewController(withIdentifier:
@@ -68,7 +71,7 @@ class LoginTableViewController: UITableViewController {
                 self.displayAlert(message: message)
             }
         }
-       
+
     }
     func dismissActivityIndicator(activityIndicator: UIActivityIndicatorView) {
         DispatchQueue.main.async {
