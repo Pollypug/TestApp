@@ -25,6 +25,32 @@ class APIClient {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else {
             completion("No token in keyChain.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
         }
         
         if let userData = postData {
