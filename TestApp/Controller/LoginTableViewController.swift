@@ -22,6 +22,8 @@ class LoginTableViewController: UITableViewController {
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = false
         activityIndicator.startAnimating()
+        
+        loginTextField.text = "hello"
     }
     
     
@@ -36,8 +38,10 @@ class LoginTableViewController: UITableViewController {
         
         view.addSubview(self.activityIndicator)
         
-        let login = loginTextField.text
+        var login = loginTextField.text
         let password = passwordTextField.text
+        
+        
         
         if ((login?.isEmpty)! || (password?.isEmpty)!) {
             displayAlert(message: "All fields required to be filled")
