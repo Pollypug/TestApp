@@ -52,6 +52,8 @@ class LoginTableViewController: UITableViewController {
                         "password" : passwordTextField.text!] as [String : String]
         
         let user = APIClient()
+
+        let newUser = user
         
         user.login(postData: postData) { (message, success) in
         self.dismissActivityIndicator(activityIndicator: self.activityIndicator)
